@@ -1,6 +1,6 @@
 <!-- 7.x.y GIMP — Scissors Select (Nůžky) -->
 <section id="section7-scissors" class="container my-5">
-  <h3 class="mb-4">7.x.y GIMP — Scissors Select (Nůžky)</h3>
+  <h3 class="mb-4">7.1.7 GIMP — Scissors Select (Nůžky)</h3>
 
   <!-- Co se naučíš -->
   <div class="container my-4 p-4 border rounded bg-light">
@@ -16,35 +16,48 @@
       <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-glossary">📘 Pojmy & režimy</button>
       <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modal-shortcuts">⌨️ Zkratky & navigace</button>
       <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#modal-why-unreliable">⚠️ Kdy Nůžky selžou</button>
+      <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#modal-troubleshoot">🛠️ Troubleshooting</button>
       <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modal-alternatives">🧭 Alternativy</button>
-      <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#modal-troubleshoot">🛠️ Troubleshooting & best-practice</button>
     </div>
   </div>
 
   <div class="accordion" id="gimpScissors">
 
-    <!-- 1) Teorie & nastavení prostředí -->
+    <!-- 1) Teorie -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="h-scissors-theory">
         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c-scissors-theory" aria-expanded="true" aria-controls="c-scissors-theory">
-          1) Teorie: jak „Nůžky“ fungují a co ovlivní kvalitu (Teorie)
+          1) Teorie: jak „Nůžky“ fungují a co ovlivní kvalitu
         </button>
       </h2>
       <div id="c-scissors-theory" class="accordion-collapse collapse show" aria-labelledby="h-scissors-theory" data-bs-parent="#gimpScissors">
         <div class="accordion-body">
           <div class="alert alert-secondary mb-3">
-            <strong>🧠 Princip:</strong> algoritmus hledá maximální změnu jasu/barvy podél tvé spojnice a snaží se k ní „přichytit“. Funguje lépe na <em>kontrastních</em> hranách, hůře na „měkkých“ texturách (vlasy, listí, mlha).
+            <strong>🧠 Princip:</strong> algoritmus hledá výraznou změnu jasu/barvy podél tvé spojnice a snaží se k ní „přichytit“. Funguje lépe na <em>kontrastních</em> hranách, hůře na jemných texturách (vlasy, listí, mlha).
           </div>
-          <ol class="mb-0">
-            <li>Otevři obrázek (<kbd>File → Open</kbd>).</li>
-            <li>Vyber <strong>Scissors Select</strong> (skupina s Free Select) nebo stiskni <kbd>I</kbd>.</li>
-            <li>V <strong>Tool Options</strong> nastav: <em>Mode</em> = <strong>Replace</strong>, zapni <strong>Anti-aliasing</strong>, případné <strong>Feather</strong> nastav ještě před kreslením.</li>
-          </ol>
+
+          <!-- Obrázkové okno -->
+          <div class="ratio ratio-16x9 mb-2">
+            <img id="img-scissors-theory" class="img-contained rounded border"
+                 src="https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/0.png"
+                 alt="Scissors Select – princip přichycení na hranu">
+          </div>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-sm btn-outline-secondary" data-gallery-prev="img-scissors-theory">◀</button>
+            <small class="text-muted">Princip & přehled</small>
+            <button class="btn btn-sm btn-outline-secondary" data-gallery-next="img-scissors-theory">▶</button>
+          </div>
+          <div data-gallery-src="img-scissors-theory"
+               data-images='[
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/0.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/1.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/2.png"
+               ]'></div>
         </div>
       </div>
     </div>
 
-    <!-- 2) Workflow bez Interactive Boundary (Úkol 1) -->
+    <!-- 2) Úkol 1 — Základ bez Interactive Boundary -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="h-scissors-basic">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c-scissors-basic" aria-expanded="false" aria-controls="c-scissors-basic">
@@ -53,39 +66,73 @@
       </h2>
       <div id="c-scissors-basic" class="accordion-collapse collapse" aria-labelledby="h-scissors-basic" data-bs-parent="#gimpScissors">
         <div class="accordion-body">
-          <ol>
-            <li>Nech <em>Interactive Boundary</em> vypnuté.</li>
-            <li>Začni klikat uzly <strong>po kratších úsecích</strong> podél hrany (např. hřeben hor).</li>
-            <li>Vrať se k 1. uzlu → kurzor ukáže „sjednocení“ → klikni a křivku <strong>uzavři</strong>.</li>
-            <li>Potvrď výběr <kbd>Enter</kbd>.</li>
-            <li>Ulož jako <code>scissors-01.xcf</code>.</li>
+          <ol class="mb-3">
+            <li>Vyber <strong>Scissors Select</strong> (<kbd>I</kbd>) → <em>Mode</em> <strong>Replace</strong>, <strong>Anti-aliasing</strong> zapnuto, <strong>Feather</strong> dle potřeby <em>před</em> kreslením.</li>
+            <li>Nech <em>Interactive Boundary</em> vypnuté. Vytvářej <strong>krátké segmenty</strong> po hraně (např. hřeben hor).</li>
+            <li>Vrať se k 1. uzlu → klikni pro <strong>uzavření</strong> křivky.</li>
+            <li>Potvrď výběr <kbd>Enter</kbd> a ulož jako <code>scissors-01.xcf</code>.</li>
           </ol>
-          <div class="small text-muted">Tipy k tomuto úkolu najdeš v modálu <a href="#" data-bs-toggle="modal" data-bs-target="#modal-troubleshoot">🛠️ Troubleshooting</a>.</div>
+
+          <!-- Obrázkové okno -->
+          <div class="ratio ratio-16x9 mb-2">
+            <img id="img-scissors-basic" class="img-contained rounded border"
+                 src="https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/10.png"
+                 alt="Základ bez Interactive Boundary">
+          </div>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-sm btn-outline-secondary" data-gallery-prev="img-scissors-basic">◀</button>
+            <small class="text-muted">Bez Interactive Boundary</small>
+            <button class="btn btn-sm btn-outline-secondary" data-gallery-next="img-scissors-basic">▶</button>
+          </div>
+          <div data-gallery-src="img-scissors-basic"
+               data-images='[
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/10.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/11.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/12.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/13.png"
+               ]'></div>
         </div>
       </div>
     </div>
 
-    <!-- 3) Workflow s Interactive Boundary (Úkol 2) -->
+    <!-- 3) Úkol 2 — Interactive Boundary -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="h-scissors-interactive">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c-scissors-interactive" aria-expanded="false" aria-controls="c-scissors-interactive">
-          3) Úkol 2 — „Interactive Boundary“: kreslení s živým náhledem
+          3) Úkol 2 — „Interactive Boundary“: živý náhled přichycení
         </button>
       </h2>
       <div id="c-scissors-interactive" class="accordion-collapse collapse" aria-labelledby="h-scissors-interactive" data-bs-parent="#gimpScissors">
         <div class="accordion-body">
-          <ol>
-            <li>Zapni <strong>Interactive Boundary</strong> v <em>Tool Options</em>.</li>
-            <li>Drž myš při vytváření segmentu a sleduj, jak se hrana přichytává. Jakmile začne „uhýbat“, <strong>přestaň</strong> a založ nový uzel.</li>
-            <li>Uzavři, potvrď <kbd>Enter</kbd>.</li>
-            <li>Porovnej s výsledkem z Úkolu 1 a zapiš si rozdíly (ostrost hrany, počet uzlů, přesnost).</li>
-            <li>Ulož jako <code>scissors-02.xcf</code>.</li>
+          <ol class="mb-3">
+            <li>Zapni <strong>Interactive Boundary</strong> v Tool Options.</li>
+            <li>Drž myš, sleduj „živou“ přilnavost. Jakmile křivka začne uhýbat, <strong>zastav</strong> a založ nový uzel.</li>
+            <li>Uzavři, potvrď <kbd>Enter</kbd>, ulož jako <code>scissors-02.xcf</code>. Porovnej s Úkolem 1.</li>
           </ol>
+
+          <!-- Obrázkové okno -->
+          <div class="ratio ratio-16x9 mb-2">
+            <img id="img-scissors-interactive2" class="img-contained rounded border"
+                 src="https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/20.png"
+                 alt="Interactive Boundary v praxi">
+          </div>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-sm btn-outline-secondary" data-gallery-prev="img-scissors-interactive2">◀</button>
+            <small class="text-muted">Interactive Boundary</small>
+            <button class="btn btn-sm btn-outline-secondary" data-gallery-next="img-scissors-interactive2">▶</button>
+          </div>
+          <div data-gallery-src="img-scissors-interactive2"
+               data-images='[
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/20.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/21.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/22.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/23.png"
+               ]'></div>
         </div>
       </div>
     </div>
 
-    <!-- 4) Aplikace výběru (Úkol 3) -->
+    <!-- 4) Úkol 3 — Aplikace výběru -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="h-scissors-apply">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c-scissors-apply" aria-expanded="false" aria-controls="c-scissors-apply">
@@ -94,18 +141,37 @@
       </h2>
       <div id="c-scissors-apply" class="accordion-collapse collapse" aria-labelledby="h-scissors-apply" data-bs-parent="#gimpScissors">
         <div class="accordion-body">
-          <ol>
-            <li><strong>Výplň</strong>: přetáhni FG barvu do výběru nebo použij <em>Bucket Fill</em> (<kbd>Shift+B</kbd>).</li>
-            <li><strong>Úpravy Colors</strong>: <em>Colors → Saturation</em> – nastav sytost jen uvnitř výběru.</li>
-            <li><strong>Layer Mask</strong>: v panelu Layers → pravým na vrstvu → <em>Add Layer Mask</em> → <em>Initialize to Selection</em>. Potřebuješ-li opačně, zaškrtni <em>Invert Mask</em>.</li>
-            <li>Jemné doladění hran: měkký štětec do masky (černá skrývá, bílá odhaluje).</li>
+          <ol class="mb-3">
+            <li><strong>Výplň:</strong> přetáhni FG barvu do výběru nebo použij <em>Bucket Fill</em> (<kbd>Shift+B</kbd>).</li>
+            <li><strong>Colors:</strong> třeba <em>Colors → Saturation</em> – platí jen uvnitř výběru.</li>
+            <li><strong>Layer Mask:</strong> pravým na vrstvu → <em>Add Layer Mask</em> → <em>Initialize to Selection</em> (případně <em>Invert</em>).</li>
+            <li><strong>Dolaď hranice</strong> malováním do masky (měkký štětec, nízká opacity).</li>
             <li>Ulož jako <code>scissors-03.xcf</code>.</li>
           </ol>
+
+          <!-- Obrázkové okno -->
+          <div class="ratio ratio-16x9 mb-2">
+            <img id="img-scissors-apply" class="img-contained rounded border"
+                 src="https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/30.png"
+                 alt="Výplň, Colors a maska vrstvy z výběru">
+          </div>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-sm btn-outline-secondary" data-gallery-prev="img-scissors-apply">◀</button>
+            <small class="text-muted">Aplikace výběru</small>
+            <button class="btn btn-sm btn-outline-secondary" data-gallery-next="img-scissors-apply">▶</button>
+          </div>
+          <div data-gallery-src="img-scissors-apply"
+               data-images='[
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/30.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/31.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/32.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/33.png"
+               ]'></div>
         </div>
       </div>
     </div>
 
-    <!-- 5) Porovnání s alternativami (Úkol 4) -->
+    <!-- 5) Úkol 4 — Porovnání s alternativami -->
     <div class="accordion-item">
       <h2 class="accordion-header" id="h-scissors-alt">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c-scissors-alt" aria-expanded="false" aria-controls="c-scissors-alt">
@@ -114,14 +180,30 @@
       </h2>
       <div id="c-scissors-alt" class="accordion-collapse collapse" aria-labelledby="h-scissors-alt" data-bs-parent="#gimpScissors">
         <div class="accordion-body">
-          <ol>
-            <li>Stejný objekt vyber pomocí <strong>Free Select</strong> (ručně).</li>
-            <li>Stejný objekt vyber pomocí <strong>Foreground Select</strong> (nahrubo označ, pak dobarvi štětcem).</li>
-            <li>Porovnej čas, počet kroků, přesnost hrany a potřebné čištění.</li>
-            <li>Doporuč nástroj pro <em>kontrastní hrany</em>, <em>vlasy/listí</em>, <em>produkt na jednobarevném pozadí</em>.</li>
-            <li>Ulož jako <code>scissors-04-notes.txt</code> (stručné shrnutí).</li>
+          <ol class="mb-3">
+            <li>Vyber stejný objekt <strong>Free Selectem</strong> (ručně).</li>
+            <li>Vyber stejný objekt <strong>Foreground Selectem</strong> (poloautomaticky) a dočisti maskou.</li>
+            <li>Porovnej čas, počet uzlů/kroků, přesnost hrany, nutné čištění.</li>
+            <li>Zapiš doporučení nástroje pro: <em>kontrastní hrany</em>, <em>vlasy/listí</em>, <em>produkt na jednobarevném pozadí</em>.</li>
           </ol>
-          <div class="small text-muted">Rozhodovací tipy najdeš v modálu <a href="#" data-bs-toggle="modal" data-bs-target="#modal-alternatives">🧭 Alternativy</a>.</div>
+
+          <!-- Obrázkové okno -->
+          <div class="ratio ratio-16x9 mb-2">
+            <img id="img-scissors-alt" class="img-contained rounded border"
+                 src="https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/40.png"
+                 alt="Porovnání Scissors / Free / Foreground">
+          </div>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-sm btn-outline-secondary" data-gallery-prev="img-scissors-alt">◀</button>
+            <small class="text-muted">Porovnání nástrojů</small>
+            <button class="btn btn-sm btn-outline-secondary" data-gallery-next="img-scissors-alt">▶</button>
+          </div>
+          <div data-gallery-src="img-scissors-alt"
+               data-images='[
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/40.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/41.png",
+                 "https://jankonrad-site.github.io/2025Bio/learn.jankonrad.com/Assets/img/gimp/Scissors/42.png"
+               ]'></div>
         </div>
       </div>
     </div>
@@ -140,7 +222,6 @@
   </div>
 
   <!-- MODALS (rady jen zde) -->
-  <!-- Pojmy & režimy -->
   <div class="modal fade" id="modal-glossary" tabindex="-1" aria-labelledby="modal-glossary-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content">
       <div class="modal-header">
@@ -159,7 +240,6 @@
     </div></div>
   </div>
 
-  <!-- Zkratky & navigace -->
   <div class="modal fade" id="modal-shortcuts" tabindex="-1" aria-labelledby="modal-shortcuts-label" aria-hidden="true">
     <div class="modal-dialog"><div class="modal-content">
       <div class="modal-header">
@@ -177,7 +257,6 @@
     </div></div>
   </div>
 
-  <!-- Kdy Nůžky selžou -->
   <div class="modal fade" id="modal-why-unreliable" tabindex="-1" aria-labelledby="modal-why-unreliable-label" aria-hidden="true">
     <div class="modal-dialog modal-lg"><div class="modal-content">
       <div class="modal-header">
@@ -186,33 +265,15 @@
       </div>
       <div class="modal-body">
         <ul>
-          <li>Nízký kontrast mezi objektem a pozadím → algoritmus „neví“, kam se chytit.</li>
-          <li>Jemné textury (vlasy, tráva, listí) → hrana je rozpitá, výsledek bývá „zubatý“.</li>
-          <li>Šum a JPEG artefakty → falešné mikro-hrany matou výběr.</li>
-          <li><strong>Řešení:</strong> kratší segmenty, více uzlů, následné čištění maskou; případně použij alternativu.</li>
+          <li>Nízký kontrast objekt/pozadí → algoritmus „neví“, kam se chytit.</li>
+          <li>Jemné textury (vlasy, tráva, listí) → rozpitá hrana, zubatý výsledek.</li>
+          <li>Šum a JPEG artefakty → falešné mikro-hrany.</li>
+          <li><strong>Řešení:</strong> kratší segmenty, víc uzlů, čištění maskou; případně zvol alternativu.</li>
         </ul>
       </div>
     </div></div>
   </div>
 
-  <!-- Alternativy -->
-  <div class="modal fade" id="modal-alternatives" tabindex="-1" aria-labelledby="modal-alternatives-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg"><div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modal-alternatives-label">Alternativy: kdy co zvolit?</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
-      </div>
-      <div class="modal-body">
-        <ul>
-          <li><strong>Free Select</strong>: plná kontrola rukou – nejlepší na komplikované hrany, když „Nůžky“ plavou.</li>
-          <li><strong>Foreground Select</strong>: poloautomatika pro lidi/objekty – rychlé vyseknutí, pak dočištění štětcem do masky.</li>
-          <li><strong>Paths (Beziery)</strong>: precizní, upravitelné křivky – top na produktové foto a perfektní hrany.</li>
-        </ul>
-      </div>
-    </div></div>
-  </div>
-
-  <!-- Troubleshooting & best-practice -->
   <div class="modal fade" id="modal-troubleshoot" tabindex="-1" aria-labelledby="modal-troubleshoot-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable"><div class="modal-content">
       <div class="modal-header">
@@ -221,11 +282,27 @@
       </div>
       <div class="modal-body">
         <ul>
-          <li><strong>Zubaté hrany?</strong> Zapni Anti-aliasing; Feather 1–3 px pro foto (víc jen záměrně).</li>
-          <li><strong>Únik hrany do pozadí?</strong> Dělej kratší segmenty; posuň problémové uzly; přidej mezibody.</li>
+          <li><strong>Zubaté hrany?</strong> Anti-aliasing ON; Feather 1–3 px u fotek (víc jen záměrně).</li>
+          <li><strong>Únik hrany do pozadí?</strong> Kratší segmenty, posuň problémové uzly, přidej mezibody.</li>
           <li><strong>Maska „kouše“ do objektu?</strong> Maluj do masky bílou/černou měkkým štětcem (Opacity ~20–40 %).</li>
-          <li><strong>Potřebuji absolutní čistotu?</strong> Přepni na Paths a dolaď Bezier uzly.</li>
-          <li><strong>Feather nefunguje?</strong> U „Nůžek“ ho nastav <em>před</em> kreslením – později se neuplatní.</li>
+          <li><strong>Potřebuji precizní okraj?</strong> Paths (Beziery) a ruční doladění.</li>
+          <li><strong>Feather „nefunguje“?</strong> U Scissors ho nastav před kreslením; po potvrzení výběru změna neplatí zpětně.</li>
+        </ul>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="modal fade" id="modal-alternatives" tabindex="-1" aria-labelledby="modal-alternatives-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg"><div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-alternatives-label">Alternativy: kdy co zvolit?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li><strong>Free Select</strong>: plná kontrola rukou – na komplikované hrany, když „Nůžky“ plavou.</li>
+          <li><strong>Foreground Select</strong>: poloautomatika pro osoby/objekty – rychlé vyseknutí, dočistit maskou.</li>
+          <li><strong>Paths (Beziery)</strong>: precizní, upravitelné křivky – ideál pro produktovou fotografii.</li>
         </ul>
       </div>
     </div></div>
