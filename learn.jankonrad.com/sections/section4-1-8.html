@@ -1,330 +1,323 @@
-<!-- =========================================================
-     4.1.7 PROJEKT: Kalkulačka řízená menu (funkce → cykly → výjimky → sys)
-     ========================================================= -->
+<!-- ========================================= 
+     4.1.8 Tvorba menu – For, While, „pole“ (list), dispatcher
+     (praktické cvičení od nulového menu k chytrému dispatchi)
+     ========================================= -->
 <section id="section4-1-8" class="container my-5">
-  <h3 class="mb-3">4.1.7 Kalkulačka krok-za-krokem: funkce → cykly → výjimky → <code>sys</code></h3>
-  <p class="lead">Postavíme kalkulačku jako skutečnou mini-aplikaci: <b>hlavní menu ve smyčce</b> vyvolá <b>funkci kalkulačky</b>, která řeší vstupy, výběr operace a zobrazení výsledku. Program ukončíme korektně přes <code>sys.exit()</code>.</p>
+  <style>
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace}
+    .tip{border-left:4px solid #0d6efd;padding:.75rem 1rem;background:#f8f9fa}
+    .warn{border-left:4px solid #dc3545;padding:.75rem 1rem;background:#fff5f5}
+    .ok{border-left:4px solid #198754;padding:.75rem 1rem;background:#f6fff8}
+    pre code{white-space:pre}
+  </style>
 
-  <!-- Akordeon kroků -->
-  <div class="accordion" id="acc-calc-menu">
+  <h3 class="mb-4">4.1.8 Tvorba menu – <code>for</code>, <code>while</code>, seznamy a „dispatcher“</h3>
 
-    <!-- Krok 1: čisté funkce operací (vrací číslo nebo text chyby) -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="c1h">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#c1" aria-expanded="true">
-          1) Funkce operací: krátké a jednoúčelové
-        </button>
-      </h2>
-      <div id="c1" class="accordion-collapse collapse show" data-bs-parent="#acc-calc-menu">
-        <div class="accordion-body">
-          <p>Začneme čtyřmi funkcemi. Vrací <b>číslo</b> (nebo u dělení text v případě nuly). Tiskneme až později.</p>
-<pre><code class="language-python">def soucet(a, b):  return a + b
-def rozdil(a, b):  return a - b
-def soucin(a, b):  return a * b
-def podil(a, b):
-    if b == 0:
-        return "Dělit nulou nejde."
-    return a / b</code></pre>
-          <div class="d-flex flex-wrap gap-2">
-            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalReturnVsPrint">return × print – proč vracet?</button>
-            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalFstring">f-string za chvíli v prezentaci výsledku</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Krok 2: načtení čísel s try/except -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="c2h">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2">
-          2) Načtení čísel: <code>try/except</code> a opakování dotazu
-        </button>
-      </h2>
-      <div id="c2" class="accordion-collapse collapse" data-bs-parent="#acc-calc-menu">
-        <div class="accordion-body">
-          <p>Chceme jistotu, že máme čísla. Když ne, <code>ValueError</code> → slušně požádáme znovu.</p>
-<pre><code class="language-python">def nacti_cisla():
-    while True:
-        try:
-            a = float(input("Zadejte první číslo: "))
-            b = float(input("Zadejte druhé číslo: "))
-            return a, b
-        except ValueError:
-            print("Musíte zadat číslo! Zkuste to znovu.")
-            # while se opakuje</code></pre>
-          <div class="d-flex flex-wrap gap-2">
-            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalValueError">Co přesně je ValueError?</button>
-            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalTryInLoop">Jak funguje try/except v cyklu?</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Krok 3: výběr operace – dispatcher vrací funkci -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="c3h">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3">
-          3) Výběr operace: funkce, která vrací <em>funkci</em>
-        </button>
-      </h2>
-      <div id="c3" class="accordion-collapse collapse" data-bs-parent="#acc-calc-menu">
-        <div class="accordion-body">
-<pre><code class="language-python">def vyber_operaci():
-    while True:
-        op = input("Zadejte operátor (+,-,*,/): ")
-        if op == "+": return ("Součet", soucet)
-        if op == "-": return ("Rozdíl", rozdil)
-        if op == "*": return ("Součin", soucin)
-        if op == "/": return ("Podíl",  podil)
-        print("Neznámý operátor, zkuste znovu.")</code></pre>
-          <p>Vracíme dvojici: <code>(název, funkce)</code> – abychom hezky vypsali výsledek.</p>
-          <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalVraciFunkci">Jak může funkce vracet funkci?</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Krok 4: kalkulačka jako jedna volatelná funkce -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="c4h">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c4">
-          4) Složíme kalkulačku do jedné funkce: <code>spust_kalkulacku()</code>
-        </button>
-      </h2>
-      <div id="c4" class="accordion-collapse collapse" data-bs-parent="#acc-calc-menu">
-        <div class="accordion-body">
-<pre><code class="language-python">def spust_kalkulacku():
-    print("\n=== KALKULAČKA ===")
-    a, b = nacti_cisla()                 # 1) načti čísla
-    nazev, funkce = vyber_operaci()      # 2) vyber operaci (název + funkce)
-    vysledek = funkce(a, b)              # 3) spočítej
-    # 4) prezentace výsledku (f-string)
-    if isinstance(vysledek, str):
-        print(vysledek)                   # např. "Dělit nulou nejde."
-    else:
-        print(f"{nazev}: {vysledek}")</code></pre>
-          <div class="tip">Kalkulačka teď žije v jediné funkci. **Menu** ji jen volá, a to kolikrát chceš.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Krok 5: menu ve smyčce while + sys.exit -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="c5h">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c5">
-          5) Hlavní menu: smyčka, volání kalkulačky, korektní ukončení
-        </button>
-      </h2>
-      <div id="c5" class="accordion-collapse collapse" data-bs-parent="#acc-calc-menu">
-        <div class="accordion-body">
-<pre><code class="language-python">import sys
-
-def vypis_menu():
-    print("\n========== MENU ==========")
-    print("1) Kalkulačka")
-    print("2) Nápověda")
-    print("3) Exit")
-
-def main():
-    while True:
-        vypis_menu()
-        volba = input("Zadejte volbu: ")
-        if volba == "1":
-            spust_kalkulacku()
-            input("Pokračuj klávesou ENTER...")
-        elif volba == "2":
-            print("Nápověda: zadejte dvě čísla a vyberte operátor (+,-,*,/).")
-            input("ENTER...")
-        elif volba == "3":
-            sys.exit("Program ukončen.")       # korektní konec
-        else:
-            print("Neplatná volba, zkuste znovu.")</code></pre>
-          <div class="d-flex flex-wrap gap-2">
-            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalSys">Co dělá sys.exit()?</button>
-            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalWhileVsFlag">while True vs. flag proměnná</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Krok 6: hygiena kódu – komentáře, odsazení, VS Code -->
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="c6h">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c6">
-          6) Neztrať se: komentáře, odsazení a VS Code triky
-        </button>
-      </h2>
-      <div id="c6" class="accordion-collapse collapse" data-bs-parent="#acc-calc-menu">
-        <div class="accordion-body">
-<pre><code class="language-python"># ====== MENU APLIKACE ======
-# krátké, výrazné záhlaví bloků pomůže v orientaci
-def vypis_menu():
-    # --- Výpis možností ---
-    print("...")
-
-def spust_kalkulacku():
-    # --- Vstupy ---
-    # --- Volba operace ---
-    # --- Výpočet a výstup ---
-    pass</code></pre>
-          <ul class="mb-2">
-            <li><b>Odsadit blok</b>: označ řádky → <span class="kbd">Tab</span> (od-odsadit <span class="kbd">Shift</span>+<span class="kbd">Tab</span>).</li>
-            <li><b>Autoformát</b>: <span class="kbd">Shift</span>+<span class="kbd">Alt</span>+<span class="kbd">F</span> (Win/Linux), <span class="kbd">Option</span>+<span class="kbd">Shift</span>+<span class="kbd">F</span> (macOS).</li>
-            <li><b>Rychlé komentování</b>: <span class="kbd">Ctrl</span>/<span class="kbd">Cmd</span> + <span class="kbd">/</span>.</li>
-            <li><b>Sbalit/rozbalit bloky</b> podle odsazení (gutter trojúhelníčky).</li>
-          </ul>
-          <div class="ok">Krátké funkce + jasné komentáře = vnořené smyčky jsou přehledné.</div>
-        </div>
-      </div>
-    </div>
-
+  <div class="container my-4 p-4 border rounded bg-light">
+    <h4 class="mb-3">Cíl kapitoly</h4>
+    <ul class="mb-0">
+      <li>Vytisknout nabídku z dat (žádné ruční kopírování řádků).</li>
+      <li>Vybrat akci podle volby uživatele a spustit správnou funkci.</li>
+      <li>Pochopit vzor <b>dispatcher</b> – mapování <em>volba → funkce</em>.</li>
+      <li>Postavit malé, ale reálné menu, které půjde snadno rozšiřovat.</li>
+    </ul>
   </div>
 
-  <!-- Finální blok: hotový kód k odevzdání -->
+  <!-- =================================
+       Blok 1 – Menu z listu pomocí for
+       ================================= -->
+  <div class="container my-4 p-4 border rounded">
+    <h4 class="mb-3">1) Začínáme: menu z dat pomocí <code>for</code></h4>
+    <p>Nejprve si připravíme „pole“ (v Pythonu <b>list</b>) s položkami menu. Každá položka je n-tice <span class="mono">(číslo, text)</span>.</p>
+
+<pre><code class="language-python"># data menu (číslo, text)
+MENU = [
+    ("1", "Pozdrav"),
+    ("2", "Součet dvou čísel"),
+    ("3", "Konec")
+]
+
+def vytiskni_menu():
+    print("\n=== MENU ===")
+    for cislo, text in MENU:      # projdeme data a tiskneme
+        print(f"{cislo}) {text}")
+
+vytiskni_menu()</code></pre>
+
+    <div class="ok"><b>Mini-úkol 1:</b> Přidej položku <span class="mono">("9", "Nápověda")</span> a ověř, že se zobrazí bez úprav funkce.</div>
+  </div>
+
+  <!-- =================================
+       Blok 2 – Výběr volby ve while smyčce
+       ================================= -->
   <div class="container my-4 p-4 border rounded bg-light">
-    <h4 class="mb-3">🎯 Finální verze k odevzdání: menu → ve smyčce volá kalkulačku</h4>
-<pre><code class="language-python">import sys
+    <h4 class="mb-3">2) Volba uživatele a smyčka <code>while</code></h4>
+    <p>Menu chceme opakovaně. Vytvoříme nekonečnou smyčku a ukončíme ji volbou „Konec“.</p>
 
-def soucet(a, b):  return a + b
-def rozdil(a, b):  return a - b
-def soucin(a, b):  return a * b
-def podil(a, b):
-    if b == 0:
-        return "Dělit nulou nejde."
-    return a / b
+<pre><code class="language-python">def pozdrav():
+    print("Ahoj!")
 
-def nacti_cisla():
+def soucet_dvou():
+    a = int(input("První číslo: "))
+    b = int(input("Druhé číslo: "))
+    print("Součet je:", a + b)
+
+while True:
+    vytiskni_menu()
+    volba = input("Vyber možnost: ").strip()
+    if volba == "1":
+        pozdrav()
+    elif volba == "2":
+        soucet_dvou()
+    elif volba == "3":
+        print("Ukončuji…")
+        break
+    else:
+        print("Neplatná volba.")</code></pre>
+
+    <div class="tip"><b>Proč <code>while True</code>?</b> Menu běží, dokud uživatel neukončí. Jednoduché a čitelné.</div>
+    <div class="ok"><b>Mini-úkol 2:</b> Přidej do <span class="mono">elif</span> větev pro „Nápovědu“ (tisk krátké nápovědy) a přidej ji i do <span class="mono">MENU</span>.</div>
+  </div>
+
+  <!-- =================================
+       Blok 3 – Oddělíme data od chování
+       ================================= -->
+  <div class="container my-4 p-4 border rounded">
+    <h4 class="mb-3">3) Čistěji: seznam n-tic <code>(klíč, název, funkce)</code></h4>
+    <p>Místo if/elif vytvoříme u každé položky <em>přímo</em> odkaz na funkci. Jméno funkce bez závorek je hodnota, kterou můžeme uložit.</p>
+
+<pre><code class="language-python">def pozdrav():
+    print("Ahoj!")
+
+def soucet_dvou():
+    a = int(input("První číslo: "))
+    b = int(input("Druhé číslo: "))
+    print("Součet je:", a + b)
+
+def konec():
+    print("Ukončuji…")
+    return "EXIT"
+
+# (klíč, název, funkce nebo None)
+MENU_ITEMS = [
+    ("1", "Pozdrav",       pozdrav),
+    ("2", "Součet dvou",   soucet_dvou),
+    ("3", "Konec",         konec),
+]
+
+def vytiskni_menu_items():
+    print("\n=== MENU ===")
+    for k, nazev, _ in MENU_ITEMS:
+        print(f"{k}) {nazev}")
+
+while True:
+    vytiskni_menu_items()
+    volba = input("Vyber možnost: ").strip()
+    # najdeme odpovídající položku v datech
+    akce = None
+    for k, nazev, f in MENU_ITEMS:
+        if volba == k:
+            akce = f
+            break
+    if akce is None:
+        print("Neplatná volba.")
+        continue
+    if akce() == "EXIT":
+        break</code></pre>
+
+    <div class="tip"><b>Co jsme získali?</b> Nepíšeme nový <span class="mono">elif</span> pro každou akci. Data → menu, logika → funkce.</div>
+    <div class="ok"><b>Mini-úkol 3:</b> Přidej novou akci „Rozdíl dvou čísel“ jen doplněním jedné n-tice a jedné funkce.</div>
+  </div>
+
+  <!-- =================================
+       Blok 4 – Dispatcher přes slovník
+       ================================= -->
+  <div class="container my-4 p-4 border rounded bg-light">
+    <h4 class="mb-3">4) „Skutečný“ dispatcher: slovník <code>{klíč: (název, funkce)}</code></h4>
+    <p>Vyhledávání v seznamu nahradíme přímým přístupem podle klíče. Elegantní a rychlé.</p>
+
+<pre><code class="language-python">def pozdrav(): print("Ahoj!")
+def soucet_dvou():
+    a = int(input("První číslo: "))
+    b = int(input("Druhé číslo: "))
+    print("Součet je:", a + b)
+def rozdil_dvou():
+    a = int(input("První číslo: "))
+    b = int(input("Druhé číslo: "))
+    print("Rozdíl je:", a - b)
+def konec(): 
+    print("Ukončuji…"); 
+    return "EXIT"
+
+DISPATCH = {
+    "1": ("Pozdrav",      pozdrav),
+    "2": ("Součet dvou",  soucet_dvou),
+    "3": ("Rozdíl dvou",  rozdil_dvou),
+    "4": ("Konec",        konec),
+}
+
+def vytiskni_menu_dispatch():
+    print("\n=== MENU ===")
+    for k, (nazev, _) in DISPATCH.items():
+        print(f"{k}) {nazev}")
+
+while True:
+    vytiskni_menu_dispatch()
+    volba = input("Vyber možnost: ").strip()
+    nazev, funkce = DISPATCH.get(volba, (None, None))
+    if funkce is None:
+        print("Neplatná volba.")
+        continue
+    if funkce() == "EXIT":
+        break</code></pre>
+
+    <div class="tip"><b>Proč <span class="mono">dict.get()</span>?</b> Když klíč neexistuje, dostaneme výchozí hodnotu místo chyby <span class="mono">KeyError</span>.</div>
+    <div class="ok"><b>Mini-úkol 4:</b> Přidej akci „Nápověda“, která vytiskne stručné instrukce. Stačí doplnit jednu položku do <span class="mono">DISPATCH</span> a jednu funkci.</div>
+  </div>
+
+  <!-- =================================
+       Blok 5 – Validace vstupu elegantně
+       ================================= -->
+  <div class="container my-4 p-4 border rounded">
+    <h4 class="mb-3">5) Přidej bezpečné načítání čísel</h4>
+    <p>Vyčleníme univerzální funkci, aby výpočtové akce byly čisté a bez opakování kódu.</p>
+
+<pre><code class="language-python">def nacti_int(vyzva, min_value=None, max_value=None):
     while True:
         try:
-            a = float(input("Zadejte první číslo: "))
-            b = float(input("Zadejte druhé číslo: "))
-            return a, b
+            hodnota = int(input(vyzva))
         except ValueError:
-            print("Musíte zadat číslo! Zkuste to znovu.")
+            print("Zadejte prosím celé číslo."); 
+            continue
+        if min_value is not None and hodnota &lt; min_value:
+            print(f"Hodnota musí být ≥ {min_value}."); 
+            continue
+        if max_value is not None and hodnota &gt; max_value:
+            print(f"Hodnota musí být ≤ {max_value}."); 
+            continue
+        return hodnota
 
-def vyber_operaci():
+def soucet_dvou_safe():
+    a = nacti_int("První číslo: ")
+    b = nacti_int("Druhé číslo: ")
+    print("Součet je:", a + b)</code></pre>
+
+    <div class="ok"><b>Mini-úkol 5:</b> Uprav <span class="mono">soucet_dvou</span> a <span class="mono">rozdil_dvou</span> na bezpečné varianty s <span class="mono">nacti_int</span>.</div>
+  </div>
+
+  <!-- =================================
+       Blok 6 – Bonus: podmenu (vnořené menu)
+       ================================= -->
+  <div class="container my-4 p-4 border rounded bg-light">
+    <h4 class="mb-3">6) Bonus: jednoduché podmenu</h4>
+    <p>Někdy se hodí dělit akce do kategorií. Postavíme podmenu „Kalkulačka“.</p>
+
+<pre><code class="language-python">def kalk_soucet(): 
+    a = nacti_int("A: "); b = nacti_int("B: "); print("A+B =", a+b)
+def kalk_rozdil(): 
+    a = nacti_int("A: "); b = nacti_int("B: "); print("A-B =", a-b)
+
+KALK_DISPATCH = {
+    "1": ("Součet",  kalk_soucet),
+    "2": ("Rozdíl",  kalk_rozdil),
+    "3": ("Zpět",    None),
+}
+
+def menu_kalkulacka():
     while True:
-        op = input("Zadejte operátor (+,-,*,/): ")
-        if op == "+": return ("Součet", soucet)
-        if op == "-": return ("Rozdíl", rozdil)
-        if op == "*": return ("Součin", soucin)
-        if op == "/": return ("Podíl",  podil)
-        print("Neznámý operátor, zkuste znovu.")
+        print("\n=== KALKULAČKA ===")
+        for k,(n,_) in KALK_DISPATCH.items():
+            print(f"{k}) {n}")
+        v = input("Vyber: ").strip()
+        n, f = KALK_DISPATCH.get(v, (None, None))
+        if f is None:
+            if v == "3": return        # návrat „nahoru“
+            print("Neplatná volba."); 
+            continue
+        f()
 
-def spust_kalkulacku():
-    print("\n=== KALKULAČKA ===")
-    a, b = nacti_cisla()
-    nazev, funkce = vyber_operaci()
-    vysledek = funkce(a, b)
-    if isinstance(vysledek, str):
-        print(vysledek)
-    else:
-        print(f"{nazev}: {vysledek}")
+# přidej do hlavního DISPATCHu:
+# "5": ("Kalkulačka", menu_kalkulacka)</code></pre>
 
-def vypis_menu():
-    print("\n========== MENU ==========")
-    print("1) Kalkulačka")
-    print("2) Nápověda")
-    print("3) Exit")
+    <div class="ok"><b>Mini-úkol 6:</b> Přidej do podmenu ještě „Součin“ a „Podíl (s kontrolou dělení nulou)“.</div>
+  </div>
+
+  <!-- =================================
+       Blok 7 – Kompletní malý projekt menu
+       ================================= -->
+  <div class="container my-4 p-4 border rounded">
+    <h4 class="mb-3">7) Kompletní miniprojekt: menu s dispatcherem</h4>
+    <p>Hotové jádro, do kterého snadno přidáš další akce.</p>
+
+<pre><code class="language-python">def nacti_int(vyzva, min_value=None, max_value=None):
+    while True:
+        try:
+            hodnota = int(input(vyzva))
+        except ValueError:
+            print("Zadejte prosím celé číslo."); continue
+        if min_value is not None and hodnota &lt; min_value:
+            print(f"Hodnota musí být ≥ {min_value}."); continue
+        if max_value is not None and hodnota &gt; max_value:
+            print(f"Hodnota musí být ≤ {max_value}."); continue
+        return hodnota
+
+def akce_pozdrav(): print("Ahoj!")
+def akce_soucet():
+    a = nacti_int("A: "); b = nacti_int("B: "); print("A+B =", a+b)
+def akce_rozdil():
+    a = nacti_int("A: "); b = nacti_int("B: "); print("A-B =", a-b)
+def akce_napoveda():
+    print("Zadej číslo volby. Přidej akce do DISPATCH a máš rozšiřitelné menu.")
+def akce_konec():
+    print("Ukončuji…"); return "EXIT"
+
+DISPATCH = {
+    "1": ("Pozdrav",    akce_pozdrav),
+    "2": ("Součet",     akce_soucet),
+    "3": ("Rozdíl",     akce_rozdil),
+    "9": ("Nápověda",   akce_napoveda),
+    "0": ("Konec",      akce_konec),
+}
+
+def vytiskni_menu():
+    print("\n=== MENU ===")
+    # řazení podle klíče kvůli konzistentnímu pořadí
+    for k in sorted(DISPATCH.keys(), key=lambda x: (len(x), x)):
+        print(f"{k}) {DISPATCH[k][0]}")
 
 def main():
     while True:
-        vypis_menu()
-        volba = input("Zadejte volbu: ")
-        if volba == "1":
-            spust_kalkulacku()
-            input("Pokračuj klávesou ENTER...")
-        elif volba == "2":
-            print("Nápověda: zadejte dvě čísla a vyberte operátor (+,-,*,/).")
-            input("ENTER...")
-        elif volba == "3":
-            sys.exit("Program ukončen.")
-        else:
-            print("Neplatná volba, zkuste znovu.")
+        vytiskni_menu()
+        v = input("Vyber: ").strip()
+        nazev, f = DISPATCH.get(v, (None, None))
+        if f is None:
+            print("Neplatná volba."); continue
+        if f() == "EXIT": break
 
-if __name__ == "__main__":
-    main()</code></pre>
+# Odkomentuj pro spuštění:
+# main()</code></pre>
+
+    <div class="ok"><b>Mini-úkol 7:</b> Přidej akci „Kalkulačka (podmenu)“ a zapoj <span class="mono">menu_kalkulacka()</span> z předchozího bloku.</div>
+  </div>
+
+  <!-- =================================
+       Nejčastější chyby a checklist
+       ================================= -->
+  <div class="container my-4 p-4 border rounded bg-light">
+    <h4 class="mb-3">Nejčastější chyby</h4>
+    <ul class="mb-3">
+      <li><b>Zapomenuté závorky</b> při volání funkce: <span class="mono">f</span> vs. <span class="mono">f()</span>.</li>
+      <li><b>Smíchání textu a čísel</b> bez převodu → <span class="mono">TypeError</span>.</li>
+      <li><b>Chybějící validace</b> číselného vstupu, chybějící <span class="mono">continue</span> v <span class="mono">except</span>.</li>
+      <li><b>Pevné <span class="mono">if/elif</span> větvení</b> místo datově řízeného menu → těžké rozšiřování.</li>
+    </ul>
+
+    <h5>Checklist před odevzdáním</h5>
+    <ul class="mb-0">
+      <li>Menu se tiskne z dat (<span class="mono">for</span> nebo <span class="mono">dict</span>), ne ručně.</li>
+      <li>Volba „Konec“ korektně ukončí hlavní smyčku.</li>
+      <li>Všechny číselné vstupy jdou přes <span class="mono">nacti_int()</span>.</li>
+      <li>Přidání nové akce = přidám položku do <span class="mono">DISPATCH</span>, bez zásahu do hlavní smyčky.</li>
+    </ul>
   </div>
 </section>
-
-<!-- ====== Recyklované modály z dřívějška (kvůli soběstačnosti kapitoly) ====== -->
-<div class="modal fade" id="modalReturnVsPrint" tabindex="-1" aria-labelledby="modalReturnVsPrintLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content">
-    <div class="modal-header"><h5 id="modalReturnVsPrintLabel" class="modal-title">Proč raději <code>return</code> než <code>print()</code>?</h5>
-      <button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">
-<pre><code class="language-python">def f(a, b):      # návrat = data dál, testovatelnost
-    return a + b
-
-def g(a, b):      # print = jen výstup do konzole
-    print(a + b)</code></pre>
-      <p>S <code>return</code> můžeš výsledek znovu použít, uložit či testovat.</p>
-    </div>
-  </div></div>
-</div>
-
-<div class="modal fade" id="modalFstring" tabindex="-1" aria-labelledby="modalFstringLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content">
-    <div class="modal-header"><h5 id="modalFstringLabel" class="modal-title">f-string stručně</h5>
-      <button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">
-<pre><code class="language-python">a, b = 2, 3
-print(f"Součet: {a + b}")  # → Součet: 5</code></pre>
-    </div>
-  </div></div>
-</div>
-
-<div class="modal fade" id="modalValueError" tabindex="-1" aria-labelledby="modalValueErrorLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content">
-    <div class="modal-header"><h5 id="modalValueErrorLabel" class="modal-title">Co je ValueError?</h5>
-      <button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">
-<pre><code class="language-python">float("123")   # OK
-float("ahoj")  # ValueError: 'ahoj' není číslo</code></pre>
-      <p>Chytáme ho při převodu vstupu na číslo.</p>
-    </div>
-  </div></div>
-</div>
-
-<div class="modal fade" id="modalTryInLoop" tabindex="-1" aria-labelledby="modalTryInLoopLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content">
-    <div class="modal-header"><h5 id="modalTryInLoopLabel" class="modal-title">Jak funguje try/except v cyklu?</h5>
-      <button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">
-<pre><code class="language-python">while True:
-    try:
-        x = float(input("Číslo: "))
-        break
-    except ValueError:
-        print("Zkus to znovu…")</code></pre>
-      <p>Při chybě se cyklus zopakuje a znovu se zeptá.</p>
-    </div>
-  </div></div>
-</div>
-
-<div class="modal fade" id="modalSys" tabindex="-1" aria-labelledby="modalSysLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content">
-    <div class="modal-header"><h5 id="modalSysLabel" class="modal-title">Proč <code>sys.exit()</code>?</h5>
-      <button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">
-<pre><code class="language-python">import sys
-sys.exit(0)              # 0 = OK, nenulové = chyba
-# nebo:
-sys.exit("Program ukončen.")</code></pre>
-      <p>Jasné, čitelné a „profesionální“ ukončení programu.</p>
-    </div>
-  </div></div>
-</div>
-
-<div class="modal fade" id="modalWhileVsFlag" tabindex="-1" aria-labelledby="modalWhileVsFlagLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content">
-    <div class="modal-header"><h5 id="modalWhileVsFlagLabel" class="modal-title"><code>while True</code> vs. „flag“ proměnná</h5>
-      <button class="btn-close" data-bs-dismiss="modal"></button></div>
-    <div class="modal-body">
-      <ul>
-        <li><b>while True</b> + <code>break/sys.exit</code> → stručné.</li>
-        <li><b>flag proměnná</b> (<code>running = True</code>) → čitelný důvod běhu/ukončení.</li>
-      </ul>
-      <p>V téhle lekci používáme <code>while True</code> v <code>main()</code> kvůli jednoduchosti a <code>sys.exit()</code> pro korektní ukončení.</p>
-    </div>
-  </div></div>
-</div>
